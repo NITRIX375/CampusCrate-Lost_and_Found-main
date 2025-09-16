@@ -1,8 +1,8 @@
 // src/pages/Admin/AdminDashboard.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 import { Box, Typography, Tabs, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, IconButton, CircularProgress,Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -21,10 +21,10 @@ const AdminDashboard = () => {
         const fetchData = async () => {
         console.log("entry!!");
         try {
-            await axios.get('http://localhost:8080/api/auth/profile', { withCredentials: true });
+            await api.get('/api/auth/profile');
             const [itemsRes, usersRes] = await Promise.all([
-                axios.get('http://localhost:8080/api/admin/items', { withCredentials: true }),
-                axios.get('http://localhost:8080/api/admin/users', { withCredentials: true })
+                api.get('/api/admin/items'),
+                api.get('/api/admin/users')
             ]);
             console.log("Hlwww",itemsRes.data);
             setItems(itemsRes.data);
@@ -40,7 +40,7 @@ const AdminDashboard = () => {
     // added -1 
         const fetchReports = async () => {
       try {
-        const { data } = await axios.get('http://localhost:8080/api/admin/reports', { withCredentials: true });
+        const { data } = await api.get('/api/admin/reports');
         console.log("punjabii",data);
         setReports(data);
       } catch (error) {
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
     try {
         console.log('Approving item with ID:', id);
         const response = await axios.patch(
-            `http://localhost:8080/api/admin/items/${id}/approve`, 
+            `/api/admin/items/${id}/approve`, 
             {}, // No body needed, just confirm approval (you can also pass other data if needed)
             { withCredentials: true }
         );
@@ -82,7 +82,7 @@ const AdminDashboard = () => {
         if (window.confirm("Delete this item post?")) {
             try {
                 console.log(id);
-               // await axios.delete(`http://localhost:8080/api/admin/items/${id}`, { withCredentials: true });
+               // await api.delete(`/api/admin/items/${id}`);
                 toast.success("Item deleted!");
                 fetchData();
             } catch (error) { toast.error("Failed to delete item."); }
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
     const handleToggleBlockUser = async (id) => {
         try {
             const user = users.find(u => u._id === id);
-            await axios.patch(`http://localhost:8080/api/admin/users/${id}/block`, {}, { withCredentials: true });
+            await api.patch(`/api/admin/users/${id}/block`, {});
             toast.success(`User ${user.isBlocked ? 'unblocked' : 'blocked'}!`);
             fetchData();
         } catch (error) { toast.error("Action failed."); }
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
 
      const handleUpdateStatus = async (reportId, status) => {
     try {
-      await axios.patch(`http://localhost:8080/api/admin/reports/${reportId}/status`, { status }, { withCredentials: true });
+      await api.patch(`/api/admin/reports/${reportId}/status`, { status });
       
       console.log("wassup!1");
       setReports((prevReports) => 
