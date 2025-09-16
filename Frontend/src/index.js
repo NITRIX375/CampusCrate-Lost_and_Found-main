@@ -6,8 +6,8 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// ⚠️ IMPORTANT: Replace this with your actual Google Client ID
-const GOOGLE_CLIENT_ID = "419116453930-gdgsj3esqfhcubq9pisq66fea2681j1s.apps.googleusercontent.com"; 
+// Use Google Client ID from environment variable
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
