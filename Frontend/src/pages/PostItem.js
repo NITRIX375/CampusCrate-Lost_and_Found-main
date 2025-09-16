@@ -1,8 +1,8 @@
 // src/pages/PostItem.js
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import api from '../utils/api';
 import { Card, CardContent, CardHeader, Typography, TextField, Button, Grid, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';

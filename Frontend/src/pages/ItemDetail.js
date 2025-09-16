@@ -153,10 +153,9 @@ const ItemDetail = () => {
     try {
 
         console.log("aagye!1");
-      await axios.post(
+      await api.post(
         `/api/items/${item._id}/report`,
-        { description },
-        { withCredentials: true }
+        { description }
       );
       toast.success('Report submitted successfully!');
       setOpenReportDialog(false);

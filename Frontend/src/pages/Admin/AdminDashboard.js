@@ -63,10 +63,9 @@ const AdminDashboard = () => {
     const handleApproveItem = async (id) => {
     try {
         console.log('Approving item with ID:', id);
-        const response = await axios.patch(
+        const response = await api.patch(
             `/api/admin/items/${id}/approve`, 
-            {}, // No body needed, just confirm approval (you can also pass other data if needed)
-            { withCredentials: true }
+            {} // No body needed, just confirm approval (you can also pass other data if needed)
         );
         toast.success("Item approved!");
         fetchData(); // Refresh data after approval

@@ -88,10 +88,9 @@ const Dashboard = () => {
 
      const handleEditSubmit = async () => {
         try {
-            await axios.patch(
+            await api.patch(
                 `/api/claims/edit-claim/${editClaim._id}`,
-                { claimantAnswer: claimAnswer, message: message },
-                { withCredentials: true }
+                { claimantAnswer: claimAnswer, message: message }
             );
             setMyClaims(myClaims.map(claim => (claim._id === editClaim._id ? { ...claim, claimAnswer, message } : claim)));
             setOpenEditDialog(false);
