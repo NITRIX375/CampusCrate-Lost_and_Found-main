@@ -1,7 +1,7 @@
 // src/pages/Dashboard.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Tabs, Tab, Box, Grid, TextField, MenuItem, FormControl, InputLabel, Select, Typography, CircularProgress,Button,Card,CardContent,Stack,Dialog,DialogActions,DialogTitle,DialogContent} from '@mui/material';
+import api from '../utils/api';
 import SearchIcon from '@mui/icons-material/Search';
 import ItemCard from '../components/items/ItemCard';
 
@@ -22,11 +22,11 @@ const Dashboard = () => {
         const fetchItems = async () => {
             setLoading(true);
             try {
-                let url = `http://localhost:8080/api/items?type=${tabValue}`;
+                let url = `/api/items?type=${tabValue}`;
                 if (category && category !== 'all') url += `&category=${category}`;
                 if (searchTerm) url += `&search=${searchTerm}`;
 
-                const { data } = await axios.get(url);
+                const { data } = await api.get(url);
                 setItems(data);
             } catch (error) {
                 console.error("Failed to fetch items:", error);
@@ -36,7 +36,7 @@ const Dashboard = () => {
         };
          const fetchMyListedItems = async () => {
             try {
-                const { data } = await axios.get('http://localhost:8080/api/items/my-listed-items', { withCredentials: true });
+                const { data } = await api.get('/api/items/my-listed-items');
                 setMyListedItems(data);  // Set the user's listed items
             } catch (error) {
                 console.error("Failed to fetch listed items:", error);
@@ -45,7 +45,7 @@ const Dashboard = () => {
 
         const fetchMyClaims = async () => {
             try {
-                const { data } = await axios.get('http://localhost:8080/api/claims/my-claims', { withCredentials: true });
+                const { data } = await api.get('/api/claims/my-claims');
                 console.log(data);
                 setMyClaims(data);
             } catch (error) {
@@ -78,7 +78,7 @@ const Dashboard = () => {
 
     const handleDeleteClaim = async (claimId) => {
         try {
-            await axios.delete(`http://localhost:8080/api/claims/delete-claim/${claimId}`, { withCredentials: true });
+            await api.delete(`/api/claims/delete-claim/${claimId}`);
             setMyClaims(myClaims.filter(claim => claim._id !== claimId));  // Remove deleted claim from state
             alert('Claim deleted successfully');
         } catch (error) {
@@ -89,7 +89,7 @@ const Dashboard = () => {
      const handleEditSubmit = async () => {
         try {
             await axios.patch(
-                `http://localhost:8080/api/claims/edit-claim/${editClaim._id}`,
+                `/api/claims/edit-claim/${editClaim._id}`,
                 { claimantAnswer: claimAnswer, message: message },
                 { withCredentials: true }
             );

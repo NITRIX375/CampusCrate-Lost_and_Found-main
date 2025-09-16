@@ -1,10 +1,10 @@
 // src/pages/Login.js
 import { GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, Typography, Box } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
+import api from '../utils/api';
 
 const Login = ({ setUserInfo }) => { // Accept setUserInfo as prop
   const navigate = useNavigate();
@@ -18,11 +18,11 @@ const Login = ({ setUserInfo }) => { // Accept setUserInfo as prop
 
     try {
       console.log("Enter");
-      const res = await axios.post('http://localhost:8080/api/auth/google', {
+      const res = await api.post('/api/auth/google', {
         name,
         email,
         googleId: sub,
-      }, { withCredentials: true });
+      });
 
       console.log(res);
 

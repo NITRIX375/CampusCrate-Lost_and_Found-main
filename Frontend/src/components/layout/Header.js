@@ -1,9 +1,9 @@
 // src/components/layout/Header.js
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Avatar, Menu, MenuItem, Divider } from '@mui/material';
+import api from '../../utils/api';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -20,7 +20,7 @@ const Header = ({ userInfo, setUserInfo }) => {
         const fetchUserProfile = async () => {
             if (document.cookie.includes('jwt')) {
                 try {
-                    const res = await axios.get('http://localhost:8080/api/auth/profile', { withCredentials: true });
+                    const res = await api.get('/api/auth/profile');
                     setUserInfo(res.data);
                 } catch (error) {
                     console.log("User not logged in or session expired.");
@@ -33,7 +33,7 @@ const Header = ({ userInfo, setUserInfo }) => {
     const handleLogout = async () => {
         handleCloseUserMenu();
         try {
-            await axios.post('http://localhost:8080/api/auth/logout', {}, { withCredentials: true });
+            await api.post('/api/auth/logout', {});
             toast.success('Logged out successfully');
             setUserInfo(null); // Clear user info on logout
             navigate('/login');

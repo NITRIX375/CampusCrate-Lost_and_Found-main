@@ -16,7 +16,7 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:3000',  // Allow requests from frontend
+  origin: process.env.FRONTEND_URL,  // Allow requests from frontend
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'], // Allow PATCH method
   credentials: true, // Allow cookies (JWT tokens)
 };

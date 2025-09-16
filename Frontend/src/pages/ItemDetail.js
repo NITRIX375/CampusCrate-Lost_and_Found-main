@@ -1,9 +1,9 @@
 // src/pages/ItemDetail.js
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
+import api from '../utils/api';
 import { Box, Grid, Card, CardContent, CardMedia, Typography, Chip, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -29,7 +29,7 @@ const ItemDetail = () => {
             setLoading(true);
             let currentUser = null;
             try {
-                const profileRes = await axios.get('http://localhost:8080/api/auth/profile', { withCredentials: true });
+                const profileRes = await api.get('/api/auth/profile');
                 currentUser = profileRes.data;
                 setUserInfo(currentUser);
             } catch (error) {
@@ -37,7 +37,7 @@ const ItemDetail = () => {
             }
 
             try {
-                const itemRes = await axios.get(`http://localhost:8080/api/items/${id}`);
+                const itemRes = await api.get(`/api/items/${id}`);
                 setItem(itemRes.data);
                 if (currentUser && itemRes.data.postedBy._id === currentUser._id) {
                     setIsOwner(true);
@@ -56,7 +56,7 @@ const ItemDetail = () => {
         const fetchClaims = async () => {
             if (isOwner) {
                 try {
-                    const { data } = await axios.get(`http://localhost:8080/api/claims/my-item-claims/${id}`, { withCredentials: true });
+                    const { data } = await api.get(`/api/claims/my-item-claims/${id}`);
                     setClaims(data);
                 } catch (error) {
                     console.error("Failed to fetch claims:", error);
@@ -92,8 +92,8 @@ const ItemDetail = () => {
 
     try {
         // Send the claim submission request to the backend
-        const response = await axios.post(
-            'http://localhost:8080/api/claims',
+        const response = await api.post(
+            '/api/claims',
             { 
                 itemId: id, 
                 claimAnswer: claimAnswer, // Ensure claimAnswer is passed properly
@@ -118,11 +118,11 @@ const ItemDetail = () => {
         console.log(claimId);
         try {
             
-            await axios.patch(`http://localhost:8080/api/claims/${claimId}/status`, { status }, { withCredentials: true });
+            await api.patch(`/api/claims/${claimId}/status`, { status });
             toast.success(`Claim ${status}.`);
-            const { data } = await axios.get(`http://localhost:8080/api/claims/my-item-claims/${id}`, { withCredentials: true });
+            const { data } = await api.get(`/api/claims/my-item-claims/${id}`);
             setClaims(data);
-            const { data: itemData } = await axios.get(`http://localhost:8080/api/items/${id}`);
+            const { data: itemData } = await api.get(`/api/items/${id}`);
             setItem(itemData);
         } catch (error) { toast.error("Failed to update claim status."); }
     };
@@ -131,7 +131,7 @@ const ItemDetail = () => {
         const approvedClaim = claims.find(c => c.status === 'approved');
         if (!approvedClaim) return toast.error("An approved claim is required.");
         try {
-            await axios.patch(`http://localhost:8080/api/items/${id}/return`, { claimId: approvedClaim._id }, { withCredentials: true });
+            await api.patch(`/api/items/${id}/return`, { claimId: approvedClaim._id });
             toast.success("Item marked as returned!");
             navigate('/');
         } catch (error) { toast.error(error.response?.data?.message || "Failed to mark as returned."); }
@@ -154,7 +154,7 @@ const ItemDetail = () => {
 
         console.log("aagye!1");
       await axios.post(
-        `http://localhost:8080/api/items/${item._id}/report`,
+        `/api/items/${item._id}/report`,
         { description },
         { withCredentials: true }
       );

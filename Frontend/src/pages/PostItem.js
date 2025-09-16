@@ -49,7 +49,7 @@ const PostItem = ({ userInfo }) => {
 
     try {
       //console.log("Helloww Baabu!!");
-      await axios.post('http://localhost:8080/api/items', postData, {
+      await api.post('/api/items', postData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
